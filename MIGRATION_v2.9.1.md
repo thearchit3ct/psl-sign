@@ -31,10 +31,10 @@ checklist. Migration de **2025-12-24 (v2.3.2)** vers **2026-04-23 (v2.9.1)**.
 - [x] Branche `upgrade/documenso-v2.9.1` créée depuis `main`
 - [x] `git merge v2.9.1` — fast-forward réussi sans conflit sur le code Documenso
 - [x] Conflit `.gitignore` résolu (PSL `.env*.local` + upstream additions)
-- [ ] `npm install` pour régénérer le lockfile
-- [ ] `npm run lint` / typecheck si dispo (pas de hooks, on essaie)
-- [ ] `npm run build` (peut être long après 4 mois de deps)
-- [ ] Commit du lockfile mis à jour
+- [x] `npm install` — clean (lockfile minor delta, libc field normalization)
+- [x] `prisma generate` — succès (v6.19.3, 156 migrations détectées)
+- [ ] **Build complet local** — non vérifié localement, sera fait sur le VPS via `docker compose build`
+- [x] Commit du lockfile mis à jour
 
 ## Phase 3 — Test sur dump DB
 
