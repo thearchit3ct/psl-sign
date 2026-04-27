@@ -6,6 +6,18 @@ import { match } from 'ts-pattern';
 
 import { createEnvelope } from '@documenso/lib/server-only/envelope/create-envelope';
 import { incrementDocumentId } from '@documenso/lib/server-only/envelope/increment-id';
+import {
+  FIELD_CHECKBOX_META_DEFAULT_VALUES,
+  FIELD_DATE_META_DEFAULT_VALUES,
+  FIELD_DROPDOWN_META_DEFAULT_VALUES,
+  FIELD_EMAIL_META_DEFAULT_VALUES,
+  FIELD_INITIALS_META_DEFAULT_VALUES,
+  FIELD_NAME_META_DEFAULT_VALUES,
+  FIELD_NUMBER_META_DEFAULT_VALUES,
+  FIELD_RADIO_META_DEFAULT_VALUES,
+  FIELD_SIGNATURE_META_DEFAULT_VALUES,
+  FIELD_TEXT_META_DEFAULT_VALUES,
+} from '@documenso/lib/types/field-meta';
 import { prefixedId } from '@documenso/lib/universal/id';
 
 import { prisma } from '..';
@@ -67,7 +79,7 @@ export const seedBlankDocument = async (
   teamId: number,
   options: CreateDocumentOptions = {},
 ) => {
-  const { key, createDocumentOptions = {} } = options;
+  const { key, createDocumentOptions = {}, internalVersion = 1 } = options;
 
   const documentData = await prisma.documentData.create({
     data: {
@@ -87,7 +99,7 @@ export const seedBlankDocument = async (
     data: {
       id: prefixedId('envelope'),
       secondaryId: documentId.formattedDocumentId,
-      internalVersion: 1,
+      internalVersion,
       type: EnvelopeType.DOCUMENT,
       documentMetaId: documentMeta.id,
       source: DocumentSource.DOCUMENT,
@@ -287,7 +299,7 @@ export const seedDraftDocument = async (
   recipients: (User | string)[],
   options: CreateDocumentOptions = {},
 ) => {
-  const { key, createDocumentOptions = {} } = options;
+  const { key, createDocumentOptions = {}, internalVersion = 1 } = options;
 
   const documentData = await prisma.documentData.create({
     data: {
@@ -307,7 +319,7 @@ export const seedDraftDocument = async (
     data: {
       id: prefixedId('envelope'),
       secondaryId: documentId.formattedDocumentId,
-      internalVersion: 1,
+      internalVersion,
       type: EnvelopeType.DOCUMENT,
       documentMetaId: documentMeta.id,
       source: DocumentSource.DOCUMENT,
@@ -372,6 +384,7 @@ export const seedDraftDocument = async (
 type CreateDocumentOptions = {
   key?: string | number;
   createDocumentOptions?: Partial<Prisma.EnvelopeUncheckedCreateInput>;
+  internalVersion?: number;
 };
 
 export const seedPendingDocument = async (
@@ -380,7 +393,7 @@ export const seedPendingDocument = async (
   recipients: (User | string)[],
   options: CreateDocumentOptions = {},
 ) => {
-  const { key, createDocumentOptions = {} } = options;
+  const { key, createDocumentOptions = {}, internalVersion = 1 } = options;
 
   const documentData = await prisma.documentData.create({
     data: {
@@ -400,7 +413,7 @@ export const seedPendingDocument = async (
     data: {
       id: prefixedId('envelope'),
       secondaryId: documentId.formattedDocumentId,
-      internalVersion: 1,
+      internalVersion,
       type: EnvelopeType.DOCUMENT,
       documentMetaId: documentMeta.id,
       source: DocumentSource.DOCUMENT,
@@ -575,6 +588,19 @@ export const seedPendingDocumentWithFullFields = async ({
               height: new Prisma.Decimal(5),
               envelopeId: document.id,
               envelopeItemId: firstItem.id,
+              fieldMeta: match(fieldType)
+                .with(FieldType.DATE, () => FIELD_DATE_META_DEFAULT_VALUES)
+                .with(FieldType.EMAIL, () => FIELD_EMAIL_META_DEFAULT_VALUES)
+                .with(FieldType.NAME, () => FIELD_NAME_META_DEFAULT_VALUES)
+                .with(FieldType.SIGNATURE, () => FIELD_SIGNATURE_META_DEFAULT_VALUES)
+                .with(FieldType.TEXT, () => FIELD_TEXT_META_DEFAULT_VALUES)
+                .with(FieldType.NUMBER, () => FIELD_NUMBER_META_DEFAULT_VALUES)
+                .with(FieldType.CHECKBOX, () => FIELD_CHECKBOX_META_DEFAULT_VALUES)
+                .with(FieldType.RADIO, () => FIELD_RADIO_META_DEFAULT_VALUES)
+                .with(FieldType.DROPDOWN, () => FIELD_DROPDOWN_META_DEFAULT_VALUES)
+                .with(FieldType.INITIALS, () => FIELD_INITIALS_META_DEFAULT_VALUES)
+                .with(FieldType.FREE_SIGNATURE, () => undefined)
+                .exhaustive(),
             })),
           },
         },
@@ -620,7 +646,7 @@ export const seedCompletedDocument = async (
   recipients: (User | string)[],
   options: CreateDocumentOptions = {},
 ) => {
-  const { key, createDocumentOptions = {} } = options;
+  const { key, createDocumentOptions = {}, internalVersion = 1 } = options;
 
   const documentData = await prisma.documentData.create({
     data: {
@@ -640,7 +666,7 @@ export const seedCompletedDocument = async (
     data: {
       id: prefixedId('envelope'),
       secondaryId: documentId.formattedDocumentId,
-      internalVersion: 1,
+      internalVersion,
       type: EnvelopeType.DOCUMENT,
       documentMetaId: documentMeta.id,
       source: DocumentSource.DOCUMENT,

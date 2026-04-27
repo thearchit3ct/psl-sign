@@ -40,6 +40,8 @@ export const updateTeamSettingsRoute = authenticatedProcedure
       uploadSignatureEnabled,
       drawSignatureEnabled,
       delegateDocumentOwnership,
+      envelopeExpirationPeriod,
+      reminderSettings,
 
       // Branding related settings.
       brandingEnabled,
@@ -53,6 +55,8 @@ export const updateTeamSettingsRoute = authenticatedProcedure
       // emailReplyToName,
       emailDocumentSettings,
 
+      // Default recipients settings.
+      defaultRecipients,
       // AI features settings.
       aiFeaturesEnabled,
     } = data;
@@ -152,6 +156,9 @@ export const updateTeamSettingsRoute = authenticatedProcedure
             uploadSignatureEnabled,
             drawSignatureEnabled,
             delegateDocumentOwnership,
+            envelopeExpirationPeriod:
+              envelopeExpirationPeriod === null ? Prisma.DbNull : envelopeExpirationPeriod,
+            reminderSettings: reminderSettings === null ? Prisma.DbNull : reminderSettings,
 
             // Branding related settings.
             brandingEnabled,
@@ -165,6 +172,7 @@ export const updateTeamSettingsRoute = authenticatedProcedure
             // emailReplyToName,
             emailDocumentSettings:
               emailDocumentSettings === null ? Prisma.DbNull : emailDocumentSettings,
+            defaultRecipients: defaultRecipients === null ? Prisma.DbNull : defaultRecipients,
 
             // AI features settings.
             aiFeaturesEnabled,

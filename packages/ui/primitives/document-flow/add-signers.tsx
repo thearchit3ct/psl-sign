@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
-import type { Field, Recipient } from '@prisma/client';
+import type { Field } from '@prisma/client';
 import { DocumentSigningOrder, RecipientRole, SendStatus } from '@prisma/client';
 import { motion } from 'framer-motion';
 import { GripVerticalIcon, HelpCircle, Plus, Trash } from 'lucide-react';
@@ -19,6 +19,7 @@ import { useDebouncedValue } from '@documenso/lib/client-only/hooks/use-debounce
 import { useCurrentOrganisation } from '@documenso/lib/client-only/providers/organisation';
 import { useSession } from '@documenso/lib/client-only/providers/session';
 import { ZRecipientAuthOptionsSchema } from '@documenso/lib/types/document-auth';
+import type { TRecipientLite } from '@documenso/lib/types/recipient';
 import { nanoid } from '@documenso/lib/universal/id';
 import { canRecipientBeModified as utilCanRecipientBeModified } from '@documenso/lib/utils/recipients';
 import { trpc } from '@documenso/trpc/react';
@@ -54,12 +55,12 @@ import { SigningOrderConfirmation } from './signing-order-confirmation';
 import type { DocumentFlowStep } from './types';
 
 type AutoSaveResponse = {
-  recipients: Recipient[];
+  recipients: TRecipientLite[];
 };
 
 export type AddSignersFormProps = {
   documentFlow: DocumentFlowStep;
-  recipients: Recipient[];
+  recipients: TRecipientLite[];
   fields: Field[];
   signingOrder?: DocumentSigningOrder | null;
   allowDictateNextSigner?: boolean;
@@ -572,7 +573,7 @@ export const AddSignersFormPartial = ({
 
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="text-muted-foreground ml-1 cursor-help">
+                        <span className="ml-1 cursor-help text-muted-foreground">
                           <HelpCircle className="h-3.5 w-3.5" />
                         </span>
                       </TooltipTrigger>
@@ -615,7 +616,7 @@ export const AddSignersFormPartial = ({
 
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="text-muted-foreground ml-1 cursor-help">
+                        <span className="ml-1 cursor-help text-muted-foreground">
                           <HelpCircle className="h-3.5 w-3.5" />
                         </span>
                       </TooltipTrigger>
@@ -666,7 +667,7 @@ export const AddSignersFormPartial = ({
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             className={cn('py-1', {
-                              'bg-widget-foreground pointer-events-none rounded-md pt-2':
+                              'pointer-events-none rounded-md bg-widget-foreground pt-2':
                                 snapshot.isDragging,
                             })}
                           >
@@ -946,7 +947,7 @@ export const AddSignersFormPartial = ({
               <Button
                 type="button"
                 variant="secondary"
-                className="dark:bg-muted dark:hover:bg-muted/80 bg-black/5 hover:bg-black/10"
+                className="bg-black/5 hover:bg-black/10 dark:bg-muted dark:hover:bg-muted/80"
                 disabled={isSubmitting || isUserAlreadyARecipient}
                 onClick={() => onAddSelfSigner()}
               >
@@ -965,7 +966,7 @@ export const AddSignersFormPartial = ({
                 />
 
                 <label
-                  className="text-muted-foreground ml-2 text-sm"
+                  className="ml-2 text-sm text-muted-foreground"
                   htmlFor="showAdvancedRecipientSettings"
                 >
                   <Trans>Show advanced settings</Trans>

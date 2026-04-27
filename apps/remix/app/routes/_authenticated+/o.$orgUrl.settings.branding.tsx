@@ -1,3 +1,4 @@
+import { msg } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { Loader } from 'lucide-react';
 import { Link } from 'react-router';
@@ -21,7 +22,7 @@ import { useOptionalCurrentTeam } from '~/providers/team';
 import { appMetaTags } from '~/utils/meta';
 
 export function meta() {
-  return appMetaTags('Branding Preferences');
+  return appMetaTags(msg`Branding Preferences`);
 }
 
 export default function OrganisationSettingsBrandingPage() {
@@ -47,10 +48,15 @@ export default function OrganisationSettingsBrandingPage() {
     try {
       const { brandingEnabled, brandingLogo, brandingUrl, brandingCompanyDetails } = data;
 
-      let uploadedBrandingLogo: string | undefined = '';
+      let uploadedBrandingLogo: string | undefined = undefined;
 
       if (brandingLogo) {
         uploadedBrandingLogo = JSON.stringify(await putFile(brandingLogo));
+      }
+
+      // Empty the branding logo if the user unsets it.
+      if (brandingLogo === null) {
+        uploadedBrandingLogo = '';
       }
 
       await updateOrganisationSettings({
@@ -79,7 +85,7 @@ export default function OrganisationSettingsBrandingPage() {
   if (isLoadingOrganisation || !organisationWithSettings) {
     return (
       <div className="flex items-center justify-center rounded-lg py-32">
-        <Loader className="text-muted-foreground h-6 w-6 animate-spin" />
+        <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }

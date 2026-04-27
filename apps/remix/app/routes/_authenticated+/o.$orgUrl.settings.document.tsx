@@ -1,3 +1,4 @@
+import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { Loader } from 'lucide-react';
 import { useLoaderData } from 'react-router';
@@ -18,7 +19,7 @@ import { SettingsHeader } from '~/components/general/settings-header';
 import { appMetaTags } from '~/utils/meta';
 
 export function meta() {
-  return appMetaTags('Document Preferences');
+  return appMetaTags(msg`Document Preferences`);
 }
 
 export const loader = () => {
@@ -57,8 +58,11 @@ export default function OrganisationSettingsDocumentPage() {
         includeSigningCertificate,
         includeAuditLog,
         signatureTypes,
+        defaultRecipients,
         delegateDocumentOwnership,
         aiFeaturesEnabled,
+        envelopeExpirationPeriod,
+        reminderSettings,
       } = data;
 
       if (
@@ -83,11 +87,14 @@ export default function OrganisationSettingsDocumentPage() {
           includeSenderDetails,
           includeSigningCertificate,
           includeAuditLog,
+          defaultRecipients,
           typedSignatureEnabled: signatureTypes.includes(DocumentSignatureType.TYPE),
           uploadSignatureEnabled: signatureTypes.includes(DocumentSignatureType.UPLOAD),
           drawSignatureEnabled: signatureTypes.includes(DocumentSignatureType.DRAW),
           delegateDocumentOwnership: delegateDocumentOwnership,
           aiFeaturesEnabled,
+          envelopeExpirationPeriod: envelopeExpirationPeriod ?? undefined,
+          reminderSettings: reminderSettings ?? undefined,
         },
       });
 

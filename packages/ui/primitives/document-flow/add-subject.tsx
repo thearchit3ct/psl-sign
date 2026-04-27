@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
-import type { Field, Recipient } from '@prisma/client';
+import type { Field } from '@prisma/client';
 import { DocumentDistributionMethod, DocumentStatus, RecipientRole } from '@prisma/client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { InfoIcon } from 'lucide-react';
@@ -15,6 +15,7 @@ import { useCurrentOrganisation } from '@documenso/lib/client-only/providers/org
 import { RECIPIENT_ROLES_DESCRIPTION } from '@documenso/lib/constants/recipient-roles';
 import type { TDocument } from '@documenso/lib/types/document';
 import { ZDocumentEmailSettingsSchema } from '@documenso/lib/types/document-email';
+import type { TRecipientLite } from '@documenso/lib/types/recipient';
 import { formatSigningLink } from '@documenso/lib/utils/recipients';
 import { trpc } from '@documenso/trpc/react';
 import { DocumentSendEmailMessageHelper } from '@documenso/ui/components/document/document-send-email-message-helper';
@@ -59,7 +60,7 @@ import type { DocumentFlowStep } from './types';
 
 export type AddSubjectFormProps = {
   documentFlow: DocumentFlowStep;
-  recipients: Recipient[];
+  recipients: TRecipientLite[];
   fields: Field[];
   document: TDocument;
   onSubmit: (_data: TAddSubjectFormSchema) => void;
@@ -191,10 +192,10 @@ export const AddSubjectFormPartial = ({
           >
             <TabsList className="w-full">
               <TabsTrigger className="w-full" value={DocumentDistributionMethod.EMAIL}>
-                Email
+                <Trans>Email</Trans>
               </TabsTrigger>
               <TabsTrigger className="w-full" value={DocumentDistributionMethod.NONE}>
-                None
+                <Trans>None</Trans>
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -323,7 +324,7 @@ export const AddSubjectFormPartial = ({
                               <TooltipTrigger>
                                 <InfoIcon className="mx-2 h-4 w-4" />
                               </TooltipTrigger>
-                              <TooltipContent className="text-muted-foreground p-4">
+                              <TooltipContent className="p-4 text-muted-foreground">
                                 <DocumentSendEmailMessageHelper />
                               </TooltipContent>
                             </Tooltip>
@@ -331,7 +332,7 @@ export const AddSubjectFormPartial = ({
 
                           <FormControl>
                             <Textarea
-                              className="bg-background mt-2 h-16 resize-none"
+                              className="mt-2 h-16 resize-none bg-background"
                               {...field}
                               maxLength={5000}
                             />
@@ -360,7 +361,7 @@ export const AddSubjectFormPartial = ({
                 className="rounded-lg border"
               >
                 {document.status === DocumentStatus.DRAFT ? (
-                  <div className="text-muted-foreground py-16 text-center text-sm">
+                  <div className="py-16 text-center text-sm text-muted-foreground">
                     <p>
                       <Trans>We won't send anything to notify recipients.</Trans>
                     </p>
@@ -373,7 +374,7 @@ export const AddSubjectFormPartial = ({
                     </p>
                   </div>
                 ) : (
-                  <ul className="text-muted-foreground divide-y">
+                  <ul className="divide-y text-muted-foreground">
                     {recipients.length === 0 && (
                       <li className="flex flex-col items-center justify-center py-6 text-sm">
                         <Trans>No recipients</Trans>
@@ -388,10 +389,10 @@ export const AddSubjectFormPartial = ({
                         <AvatarWithText
                           avatarFallback={recipient.email.slice(0, 1).toUpperCase()}
                           primaryText={
-                            <p className="text-muted-foreground text-sm">{recipient.email}</p>
+                            <p className="text-sm text-muted-foreground">{recipient.email}</p>
                           }
                           secondaryText={
-                            <p className="text-muted-foreground/70 text-xs">
+                            <p className="text-xs text-muted-foreground/70">
                               {_(RECIPIENT_ROLES_DESCRIPTION[recipient.role].roleName)}
                             </p>
                           }
